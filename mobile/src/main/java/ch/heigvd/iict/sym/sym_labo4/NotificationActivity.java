@@ -5,18 +5,28 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.TaskStackBuilder;
 import android.support.v7.app.AppCompatActivity;
+import android.widget.Button;
 import android.widget.Toast;
 
 import ch.heigvd.iict.sym.wearcommon.Constants;
 
 public class NotificationActivity extends AppCompatActivity {
 
+    private Button pendingButton;
+    private Button actionButton;
+    private Button wearableButton;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_notification);
 
-        if(getIntent() != null)
+        pendingButton = findViewById(R.id.pendingButton);
+        actionButton = findViewById(R.id.actionButton);
+        wearableButton = findViewById(R.id.wearableButton);
+
+        if (getIntent() != null)
             onNewIntent(getIntent());
 
         /* A IMPLEMENTER */
@@ -37,8 +47,8 @@ public class NotificationActivity extends AppCompatActivity {
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
-        if(intent == null) return;
-        if(Constants.MY_PENDING_INTENT_ACTION.equals(intent.getAction()))
+        if (intent == null) return;
+        if (Constants.MY_PENDING_INTENT_ACTION.equals(intent.getAction()))
             Toast.makeText(this, "" + intent.getStringExtra("msg"), Toast.LENGTH_SHORT).show();
     }
 
@@ -47,8 +57,9 @@ public class NotificationActivity extends AppCompatActivity {
      * The intent will start a new activity Instance or bring to front an existing one.
      * See parentActivityName and launchMode options in Manifest
      * See https://developer.android.com/training/notify-user/navigation.html for TaskStackBuilder
+     *
      * @param requestCode The request code
-     * @param message The message
+     * @param message     The message
      * @return The pending Intent
      */
     private PendingIntent createPendingIntent(int requestCode, String message) {
