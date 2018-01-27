@@ -1,10 +1,14 @@
 package ch.heigvd.iict.sym.sym_labo4;
 
+import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.NotificationCompat;
+import android.support.v4.app.NotificationManagerCompat;
 import android.support.v4.app.TaskStackBuilder;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
@@ -29,6 +33,25 @@ public class NotificationActivity extends AppCompatActivity {
         if (getIntent() != null)
             onNewIntent(getIntent());
 
+        pendingButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                int id = 1;
+                PendingIntent pendingIntent = createPendingIntent(0, "Notification has been clicked !");
+
+                NotificationCompat.Builder notificationBuilder =
+                        new NotificationCompat.Builder(NotificationActivity.this, "SYM")
+                                .setSmallIcon(R.drawable.ic_lightbulb_on_black_18dp)
+                                .setContentTitle("New notification")
+                                .setContentText("New pending notification")
+                                .setContentIntent(pendingIntent);
+
+                NotificationManagerCompat notificationManager =
+                        NotificationManagerCompat.from(NotificationActivity.this);
+
+                notificationManager.notify(1, notificationBuilder.build());
+            }
+        });
         /* A IMPLEMENTER */
 
     }
