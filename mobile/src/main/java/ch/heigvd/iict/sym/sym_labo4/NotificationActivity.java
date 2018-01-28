@@ -15,10 +15,16 @@ import android.widget.Toast;
 
 import ch.heigvd.iict.sym.wearcommon.Constants;
 
+/**
+ * Notification Activity used to do test different kind of notifications sent to a wearable
+ *
+ * Modified by Michael Spierer, Eddie Ransome and Rémi Jacquemard
+ */
 public class NotificationActivity extends AppCompatActivity {
 
     public static final String EXTRA_VOICE_REPLY = "extra_voice_reply";
 
+    // A click on one of these buttons send each a different kind of notifications to the wearable.
     private Button pendingButton;
     private Button actionButton;
     private Button wearableButton;
@@ -36,12 +42,19 @@ public class NotificationActivity extends AppCompatActivity {
         if (getIntent() != null)
             onNewIntent(getIntent());
 
+        /**
+         * We test here pending notification. These are simple notification: we are using the fact
+         * that notification shown on the phone are also shown on the watch.
+         */
         pendingButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 int id = 1;
+
+                // Creating the intent called when the notification has been clicked by the user
                 PendingIntent pendingIntent = createPendingIntent(0, "Notification has been clicked !");
 
+                // Creating the notification
                 NotificationCompat.Builder notificationBuilder =
                         new NotificationCompat.Builder(NotificationActivity.this, "SYM")
                                 .setSmallIcon(R.drawable.ic_lightbulb_on_black_18dp)
@@ -49,6 +62,7 @@ public class NotificationActivity extends AppCompatActivity {
                                 .setContentText("New pending notification")
                                 .setContentIntent(pendingIntent);
 
+                // Sending the notification
                 NotificationManagerCompat notificationManager =
                         NotificationManagerCompat.from(NotificationActivity.this);
 
@@ -56,22 +70,30 @@ public class NotificationActivity extends AppCompatActivity {
             }
         });
 
+        /**
+         * This notification has some action that the user can click. Here, the user can
+         * just click on the "OK" button. It could have been easy to add some more action, and
+         * associate with each of these a different PendingIntent.
+         */
         actionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 int id = 1;
+                // Creating the intent called when the notification has been clicked by the user
                 PendingIntent pendingIntent = createPendingIntent(0, "Notification has been clicked !");
 
+                // Creating the notification
                 NotificationCompat.Builder notificationBuilder =
                         new NotificationCompat.Builder(NotificationActivity.this, "SYM")
                                 .setSmallIcon(R.drawable.ic_lightbulb_on_black_18dp)
                                 .setContentTitle("New notification")
                                 .setContentText("New pending notification")
                                 .setContentIntent(pendingIntent)
+                                // We are adding here an action button the user can click
                                 .addAction(R.drawable.ic_lightbulb_on_grey600_18dp,
                                         "OK", pendingIntent);
 
-
+                // Sending the notification
                 NotificationManagerCompat notificationManager =
                         NotificationManagerCompat.from(NotificationActivity.this);
 
@@ -79,13 +101,22 @@ public class NotificationActivity extends AppCompatActivity {
             }
         });
 
+        /**
+         * Here, we create 2 different pendingIntent: one for the phone and one for the wearable.
+         * To show how this can be usefull, we here have decided that the phone has less possible
+         * action thant the wearable.
+         */
         wearableButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 int id = 1;
+                // Creating the phone PendingIntent. The user cannot say anything else other than "OK"
                 PendingIntent phonePendingIntent = createPendingIntent(0, "The user said he's ok !");
+                // Creating the wearablePendingIntent. The user can say here anything he wants.
                 PendingIntent wearPendingIntent = createPendingIntent(0);
 
+                // The user can speak to the watch to respond to the notification. He can also click
+                // on "yes" or "no"
                 RemoteInput remoteInput = new RemoteInput.Builder(EXTRA_VOICE_REPLY)
                         .setLabel("Are you okay ?")
                         .setChoices(new String[]{"Yes", "No"})
@@ -98,23 +129,27 @@ public class NotificationActivity extends AppCompatActivity {
                                 .addRemoteInput(remoteInput)
                                 .build();
 
-
+                // Creating an extender. All of the wearable-specific actions has to be bundled
+                // within this extender.
                 NotificationCompat.WearableExtender wearableExtender =
                         new NotificationCompat.WearableExtender()
                                 .setHintHideIcon(true)
                                 .addAction(action);
 
+                // Creating the notification
                 NotificationCompat.Builder notificationBuilder =
                         new NotificationCompat.Builder(NotificationActivity.this, "SYM")
                                 .setSmallIcon(R.drawable.ic_lightbulb_on_black_18dp)
                                 .setContentTitle("Are you ok ?")
                                 .setContentText("Really ok ?")
                                 .setContentIntent(phonePendingIntent)
+                                // This is the basic option, the one called from the phone
                                 .addAction(R.drawable.ic_lightbulb_on_grey600_18dp,
                                         "I'm ok, no choice", phonePendingIntent)
+                                // We extends here our notification whith the wearable-specific actions
                                 .extend(wearableExtender);
 
-
+                // Sending notification
                 NotificationManagerCompat notificationManager =
                         NotificationManagerCompat.from(NotificationActivity.this);
 
@@ -125,10 +160,6 @@ public class NotificationActivity extends AppCompatActivity {
 
 
     /*
-     *  Code fourni pour les PendingIntent
-     */
-
-    /*
      *  Method called by system when a new Intent is received
      *  Display a toast with a message if the Intent is generated by
      *  createPendingIntent method.
@@ -136,6 +167,8 @@ public class NotificationActivity extends AppCompatActivity {
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
+
+        // We do here different things regarding the PendingIntent associated with the action
         if (intent == null) return;
         if (Constants.MY_PENDING_INTENT_ACTION.equals(intent.getAction()))
             Toast.makeText(this, "" + intent.getStringExtra("msg"), Toast.LENGTH_SHORT).show();
@@ -145,6 +178,7 @@ public class NotificationActivity extends AppCompatActivity {
 
     /**
      * Used to extract what the user said with the wearable
+     *
      * @param intent
      * @return
      */
