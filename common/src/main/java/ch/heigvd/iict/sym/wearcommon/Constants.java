@@ -11,6 +11,7 @@ public class Constants {
     public static final String MY_PENDING_INTENT_ACTION = "ch.heigvd.iict.sym.sym_labo4/MY_MESSAGE";
     public static final String MY_PENDING_INTENT_ACTION_FROM_WEAR = "ch.heigvd.iict.sym.sym_labo4/MY_WEAR_MESSAGE";
 
+    //Constants used to transfer colour information from wearable to mobile
     public static final String COLOUR_MAP = "/COLOURS";
     public static final String RED_COLOUR_KEY = "RED";
     public static final String BLUE_COLOUR_KEY = "BLUE";
