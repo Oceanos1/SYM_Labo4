@@ -20,7 +20,7 @@ import ch.heigvd.iict.sym.wearcommon.Constants;
  * according to the values received
  *
  * @author Michael Spierer
- * @author Eddie Ransome
+ * @author Edward Ransome
  * @author Rémi Jacquemard
  */
 public class WearSynchronizedActivity extends AppCompatActivity implements DataClient.OnDataChangedListener {

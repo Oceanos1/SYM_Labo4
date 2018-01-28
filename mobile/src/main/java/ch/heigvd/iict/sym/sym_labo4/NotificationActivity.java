@@ -19,7 +19,7 @@ import ch.heigvd.iict.sym.wearcommon.Constants;
  * NotificationActivity used to test different kind of notifications sent to a wearable
  *
  * @author Michael Spierer
- * @author Eddie Ransome
+ * @author Edward Ransome
  * @author Rémi Jacquemard
  */
 public class NotificationActivity extends AppCompatActivity {
