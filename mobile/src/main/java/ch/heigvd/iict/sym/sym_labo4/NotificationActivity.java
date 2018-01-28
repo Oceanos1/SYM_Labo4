@@ -16,9 +16,11 @@ import android.widget.Toast;
 import ch.heigvd.iict.sym.wearcommon.Constants;
 
 /**
- * Notification Activity used to do test different kind of notifications sent to a wearable
+ * NotificationActivity used to test different kind of notifications sent to a wearable
  *
- * Modified by Michael Spierer, Eddie Ransome and Rémi Jacquemard
+ * @author Michael Spierer
+ * @author Eddie Ransome
+ * @author Rémi Jacquemard
  */
 public class NotificationActivity extends AppCompatActivity {
 

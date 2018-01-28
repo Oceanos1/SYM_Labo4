@@ -15,6 +15,14 @@ import com.google.android.gms.wearable.Wearable;
 
 import ch.heigvd.iict.sym.wearcommon.Constants;
 
+/**
+ * WearSynchronizedActivity receives colour data from a wearable and changes its color background
+ * according to the values received
+ *
+ * @author Michael Spierer
+ * @author Eddie Ransome
+ * @author Rémi Jacquemard
+ */
 public class WearSynchronizedActivity extends AppCompatActivity implements DataClient.OnDataChangedListener {
 
     private static final String TAG = WearSynchronizedActivity.class.getSimpleName();
