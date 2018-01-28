@@ -5,7 +5,17 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
-public class WearSynchronizedActivity extends AppCompatActivity {
+import com.google.android.gms.wearable.DataClient;
+import com.google.android.gms.wearable.DataEvent;
+import com.google.android.gms.wearable.DataEventBuffer;
+import com.google.android.gms.wearable.DataItem;
+import com.google.android.gms.wearable.DataMap;
+import com.google.android.gms.wearable.DataMapItem;
+import com.google.android.gms.wearable.Wearable;
+
+import ch.heigvd.iict.sym.wearcommon.Constants;
+
+public class WearSynchronizedActivity extends AppCompatActivity implements DataClient.OnDataChangedListener {
 
     private static final String TAG = WearSynchronizedActivity.class.getSimpleName();
 
@@ -13,12 +23,39 @@ public class WearSynchronizedActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_wearsynchronized);
-
-        /* A IMPLEMENTER */
+        Wearable.getDataClient(this).addListener(this);
 
     }
 
-    /* A IMPLEMENTER */
+    @Override
+    protected void onPause() {
+        super.onPause();
+        Wearable.getDataClient(this).removeListener(this);
+    }
+
+
+    /**
+     * Allows this listener to adapt when receiving data from wearable. Calls
+     * updateColors() using the received RGB parameters.
+     * @param dataEvents
+     */
+    @Override
+    public void onDataChanged(DataEventBuffer dataEvents) {
+        for (DataEvent event : dataEvents) {
+            if (event.getType() == DataEvent.TYPE_CHANGED) {
+                // DataItem changed
+                DataItem item = event.getDataItem();
+                //If the data is COLOUR_MAP type, then we ajust screen colour
+                if (item.getUri().getPath().compareTo(Constants.COLOUR_MAP) == 0) {
+                    DataMap dataMap = DataMapItem.fromDataItem(item).getDataMap();
+                    updateColor(dataMap.getInt(Constants.RED_COLOUR_KEY),
+                            dataMap.getInt(Constants.GREEN_COLOUR_KEY),
+                            dataMap.getInt(Constants.BLUE_COLOUR_KEY));
+                }
+            }
+        }
+    }
+
 
     /*
      *  Code utilitaire fourni

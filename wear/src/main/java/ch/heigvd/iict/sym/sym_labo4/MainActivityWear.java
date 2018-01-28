@@ -6,8 +6,12 @@ import android.support.wearable.activity.WearableActivity;
 
 import com.bozapro.circularsliderrange.CircularSliderRange;
 import com.bozapro.circularsliderrange.ThumbEvent;
+import com.google.android.gms.wearable.DataClient;
+import com.google.android.gms.wearable.PutDataMapRequest;
+import com.google.android.gms.wearable.Wearable;
 
 import ch.heigvd.iict.sym.sym_labo4.widgets.CircularSliderRangeFixed;
+import ch.heigvd.iict.sym.wearcommon.Constants;
 
 public class MainActivityWear extends WearableActivity {
 
@@ -25,6 +29,8 @@ public class MainActivityWear extends WearableActivity {
     private double endAngleRed      = 90+30;
     private double endAngleGreen    = 90+60;
     private double endAngleBlue     = 90+90;
+
+    private DataClient dataClient;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,12 +90,11 @@ public class MainActivityWear extends WearableActivity {
             }
         });
 
+        dataClient = Wearable.getDataClient(this);
         updateColor();
 
-        /* A IMPLEMENTER */
     }
 
-    /* A IMPLEMENTER */
 
     @Override
     public void onEnterAmbient(Bundle ambientDetails) {
@@ -127,7 +132,15 @@ public class MainActivityWear extends WearableActivity {
         int g = (int) Math.round(255 * ((endAngleGreen - startAngleGreen) % 360) / 360.0);
         int b = (int) Math.round(255 * ((endAngleBlue  - startAngleBlue)  % 360) / 360.0);
 
-        /* A IMPLEMENTER */
+        //Create the data map and place colours in it
+        PutDataMapRequest putDataMapRequest = PutDataMapRequest.create(Constants.COLOUR_MAP);
+        putDataMapRequest.getDataMap().putInt(Constants.RED_COLOUR_KEY, r);
+        putDataMapRequest.getDataMap().putInt(Constants.GREEN_COLOUR_KEY, g);
+        putDataMapRequest.getDataMap().putInt(Constants.BLUE_COLOUR_KEY, b);
+
+        //Send to client
+        dataClient.putDataItem(putDataMapRequest.asPutDataRequest());
+
     }
 
 }
